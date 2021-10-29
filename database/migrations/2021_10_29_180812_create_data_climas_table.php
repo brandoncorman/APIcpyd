@@ -15,15 +15,15 @@ class CreateDataClimasTable extends Migration
     {
         Schema::create('data_climas', function (Blueprint $table) {
             $table->id();
-            $table->integer('codigo_estacion');
-            $table->string('nombre_estacion');
-            $table->string('latitud');
-            $table->string('longitud');
-            $table->string('altitud');
-            $table->float('precipitaciones');
-            $table->float('temperatura_maxima');
-            $table->float('temperatura_minima');
-            $table->string('fecha');
+            $table->integer('codigo_estacion')->nullable();
+            $table->string('nombre_estacion')->nullable();
+            $table->string('latitud')->nullable();
+            $table->string('longitud')->nullable();
+            $table->string('altitud')->nullable();
+            $table->float('precipitaciones')->nullable();
+            $table->float('temperatura_maxima')->nullable();
+            $table->float('temperatura_minima')->nullable();
+            $table->string('fecha')->nullable();
             $table->timestamps();
         });
     }
