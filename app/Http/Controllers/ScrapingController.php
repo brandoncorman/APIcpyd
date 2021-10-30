@@ -28,15 +28,14 @@ class ScrapingController extends Controller
             $aux = 0;
             for($i = 0 ; $i < 22; $i++) {
                 $this->data[$i]['nombre_estacion'] = $tr->eq(14 + $aux)->text();
-                $this->data[$i]['temperatura_minima'] = (float)$tr->eq(15 + $aux)->text();
-                $this->data[$i]['temperatura_maxima'] = (float)$tr->eq(17 + $aux)->text();
-                $this->data[$i]['precipitaciones'] = (float)$tr->eq(20 + $aux)->text();
+                $this->data[$i]['temperatura_minima'] = (float)$tr->eq(15 + $aux)->text() + 273.15;
+                $this->data[$i]['temperatura_maxima'] = (float)$tr->eq(17 + $aux)->text() + 273.15;
+                $this->data[$i]['precipitaciones'] = ((float)$tr->eq(20 + $aux)->text())/1000;
                 $this->data[$i]['fecha'] = $this->fecha_actual;
                 $aux += 11;
             }
         });
-
-        //Store the scraped data into database
+        //Guarda la informacion en la base de datos
         DataClimaController::store($this->data);
         
         /*return response()
