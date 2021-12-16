@@ -227,7 +227,7 @@ trait HttpClientTrait
             $alternatives = [];
 
             foreach ($defaultOptions as $key => $v) {
-                if (levenshtein($name, $key) <= \strlen($name) / 3 || str_contains($key, $name)) {
+                if (levenshtein($name, $key) <= \strlen($name) / 3 || false !== strpos($key, $name)) {
                     $alternatives[] = $key;
                 }
             }
@@ -494,7 +494,7 @@ trait HttpClientTrait
                 continue;
             }
 
-            if (str_contains($parts[$part], '%')) {
+            if (false !== strpos($parts[$part], '%')) {
                 // https://tools.ietf.org/html/rfc3986#section-2.3
                 $parts[$part] = preg_replace_callback('/%(?:2[DE]|3[0-9]|[46][1-9A-F]|5F|[57][0-9A]|7E)++/i', function ($m) { return rawurldecode($m[0]); }, $parts[$part]);
             }
@@ -522,11 +522,11 @@ trait HttpClientTrait
         $result = '';
 
         while (!\in_array($path, ['', '.', '..'], true)) {
-            if ('.' === $path[0] && (str_starts_with($path, $p = '../') || str_starts_with($path, $p = './'))) {
+            if ('.' === $path[0] && (0 === strpos($path, $p = '../') || 0 === strpos($path, $p = './'))) {
                 $path = substr($path, \strlen($p));
-            } elseif ('/.' === $path || str_starts_with($path, '/./')) {
+            } elseif ('/.' === $path || 0 === strpos($path, '/./')) {
                 $path = substr_replace($path, '/', 0, 3);
-            } elseif ('/..' === $path || str_starts_with($path, '/../')) {
+            } elseif ('/..' === $path || 0 === strpos($path, '/../')) {
                 $i = strrpos($result, '/');
                 $result = $i ? substr($result, 0, $i) : '';
                 $path = substr_replace($path, '/', 0, 4);

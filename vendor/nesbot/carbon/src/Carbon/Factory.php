@@ -11,7 +11,6 @@
 namespace Carbon;
 
 use Closure;
-use DateTimeInterface;
 use ReflectionMethod;
 
 /**
@@ -216,7 +215,7 @@ use ReflectionMethod;
  *                                                                                                                                                                                                           You should rather use the ->settings() method.
  *                                                                                                                                                                                                           Or you can use method variants: addYearsWithOverflow/addYearsNoOverflow, same variants
  *                                                                                                                                                                                                           are available for quarters, years, decade, centuries, millennia (singular and plural forms).
- * @method mixed                                              withTestNow($testNow = null, $callback = null)                                                                                     Temporarily sets a static date to be used within the callback.
+ * @method Carbon                                             withTestNow($testNow = null, $callback = null)                                                                                     Temporarily sets a static date to be used within the callback.
  *                                                                                                                                                                                               Using setTestNow to set the date, executing the callback, then
  *                                                                                                                                                                                               clearing the test instance.
  *                                                                                                                                                                                               /!\ Use this method for unit tests only.
@@ -230,7 +229,7 @@ class Factory
 
     protected $settings = [];
 
-    public function __construct(array $settings = [], ?string $className = null)
+    public function __construct(array $settings = [], string $className = null)
     {
         if ($className) {
             $this->className = $className;
@@ -290,13 +289,7 @@ class Factory
                 return \in_array($parameter->getName(), ['tz', 'timezone'], true);
             });
 
-            if (isset($arguments[0]) && \in_array($name, ['instance', 'make', 'create', 'parse'], true)) {
-                if ($arguments[0] instanceof DateTimeInterface) {
-                    $settings['innerTimezone'] = $settings['timezone'];
-                } elseif (\is_string($arguments[0]) && date_parse($arguments[0])['is_localtime']) {
-                    unset($settings['timezone'], $settings['innerTimezone']);
-                }
-            } elseif (\count($tzParameters)) {
+            if (\count($tzParameters)) {
                 array_splice($arguments, key($tzParameters), 0, [$settings['timezone']]);
                 unset($settings['timezone']);
             }

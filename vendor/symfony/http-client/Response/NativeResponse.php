@@ -366,7 +366,7 @@ final class NativeResponse implements ResponseInterface, StreamableInterface
         }
 
         if (!$handles) {
-            usleep((int) (1E6 * $timeout));
+            usleep(1E6 * $timeout);
 
             return 0;
         }

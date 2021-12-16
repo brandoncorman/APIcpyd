@@ -131,8 +131,6 @@ class Repository implements ArrayAccess, CacheContract
 
     /**
      * {@inheritdoc}
-     *
-     * @return iterable
      */
     public function getMultiple($keys, $default = null)
     {
@@ -221,8 +219,6 @@ class Repository implements ArrayAccess, CacheContract
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function set($key, $value, $ttl = null)
     {
@@ -280,8 +276,6 @@ class Repository implements ArrayAccess, CacheContract
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function setMultiple($values, $ttl = null)
     {
@@ -445,8 +439,6 @@ class Repository implements ArrayAccess, CacheContract
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function delete($key)
     {
@@ -455,8 +447,6 @@ class Repository implements ArrayAccess, CacheContract
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function deleteMultiple($keys)
     {
@@ -473,8 +463,6 @@ class Repository implements ArrayAccess, CacheContract
 
     /**
      * {@inheritdoc}
-     *
-     * @return bool
      */
     public function clear()
     {
@@ -615,7 +603,6 @@ class Repository implements ArrayAccess, CacheContract
      * @param  string  $key
      * @return bool
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return $this->has($key);
@@ -627,7 +614,6 @@ class Repository implements ArrayAccess, CacheContract
      * @param  string  $key
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->get($key);
@@ -640,7 +626,6 @@ class Repository implements ArrayAccess, CacheContract
      * @param  mixed  $value
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         $this->put($key, $value, $this->default);
@@ -652,7 +637,6 @@ class Repository implements ArrayAccess, CacheContract
      * @param  string  $key
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         $this->forget($key);

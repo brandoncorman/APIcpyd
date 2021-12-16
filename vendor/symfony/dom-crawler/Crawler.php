@@ -21,22 +21,15 @@ use Symfony\Component\CssSelector\CssSelectorConverter;
  */
 class Crawler implements \Countable, \IteratorAggregate
 {
-    /**
-     * @var string|null
-     */
     protected $uri;
 
     /**
-     * The default namespace prefix to be used with XPath and CSS expressions.
-     *
-     * @var string
+     * @var string The default namespace prefix to be used with XPath and CSS expressions
      */
     private $defaultNamespacePrefix = 'default';
 
     /**
-     * A map of manually registered namespaces.
-     *
-     * @var array<string, string>
+     * @var array A map of manually registered namespaces
      */
     private $namespaces = [];
 
@@ -46,9 +39,7 @@ class Crawler implements \Countable, \IteratorAggregate
     private $cachedNamespaces;
 
     /**
-     * The base href value.
-     *
-     * @var string|null
+     * @var string The base href value
      */
     private $baseHref;
 
@@ -90,7 +81,7 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * Returns the current URI.
      *
-     * @return string|null
+     * @return string
      */
     public function getUri()
     {
@@ -100,7 +91,7 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * Returns base href.
      *
-     * @return string|null
+     * @return string
      */
     public function getBaseHref()
     {
@@ -152,7 +143,7 @@ class Crawler implements \Countable, \IteratorAggregate
     public function addContent(string $content, string $type = null)
     {
         if (empty($type)) {
-            $type = str_starts_with($content, '<?xml') ? 'application/xml' : 'text/html';
+            $type = 0 === strpos($content, '<?xml') ? 'application/xml' : 'text/html';
         }
 
         // DOM only for HTML/XML content
@@ -964,11 +955,11 @@ class Crawler implements \Countable, \IteratorAggregate
      */
     public static function xpathLiteral(string $s)
     {
-        if (!str_contains($s, "'")) {
+        if (false === strpos($s, "'")) {
             return sprintf("'%s'", $s);
         }
 
-        if (!str_contains($s, '"')) {
+        if (false === strpos($s, '"')) {
             return sprintf('"%s"', $s);
         }
 
@@ -1063,29 +1054,29 @@ class Crawler implements \Countable, \IteratorAggregate
             }
             $expression = rtrim(substr($xpath, $startPosition, $i - $startPosition));
 
-            if (str_starts_with($expression, 'self::*/')) {
+            if (0 === strpos($expression, 'self::*/')) {
                 $expression = './'.substr($expression, 8);
             }
 
             // add prefix before absolute element selector
             if ('' === $expression) {
                 $expression = $nonMatchingExpression;
-            } elseif (str_starts_with($expression, '//')) {
+            } elseif (0 === strpos($expression, '//')) {
                 $expression = 'descendant-or-self::'.substr($expression, 2);
-            } elseif (str_starts_with($expression, './/')) {
+            } elseif (0 === strpos($expression, './/')) {
                 $expression = 'descendant-or-self::'.substr($expression, 3);
-            } elseif (str_starts_with($expression, './')) {
+            } elseif (0 === strpos($expression, './')) {
                 $expression = 'self::'.substr($expression, 2);
-            } elseif (str_starts_with($expression, 'child::')) {
+            } elseif (0 === strpos($expression, 'child::')) {
                 $expression = 'self::'.substr($expression, 7);
-            } elseif ('/' === $expression[0] || '.' === $expression[0] || str_starts_with($expression, 'self::')) {
+            } elseif ('/' === $expression[0] || '.' === $expression[0] || 0 === strpos($expression, 'self::')) {
                 $expression = $nonMatchingExpression;
-            } elseif (str_starts_with($expression, 'descendant::')) {
+            } elseif (0 === strpos($expression, 'descendant::')) {
                 $expression = 'descendant-or-self::'.substr($expression, 12);
             } elseif (preg_match('/^(ancestor|ancestor-or-self|attribute|following|following-sibling|namespace|parent|preceding|preceding-sibling)::/', $expression)) {
                 // the fake root has no parent, preceding or following nodes and also no attributes (even no namespace attributes)
                 $expression = $nonMatchingExpression;
-            } elseif (!str_starts_with($expression, 'descendant-or-self::')) {
+            } elseif (0 !== strpos($expression, 'descendant-or-self::')) {
                 $expression = 'self::'.$expression;
             }
             $expressions[] = $parenthesis.$expression;
@@ -1112,7 +1103,6 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * @return int
      */
-    #[\ReturnTypeWillChange]
     public function count()
     {
         return \count($this->nodes);
@@ -1121,16 +1111,17 @@ class Crawler implements \Countable, \IteratorAggregate
     /**
      * @return \ArrayIterator|\DOMNode[]
      */
-    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new \ArrayIterator($this->nodes);
     }
 
     /**
+     * @param \DOMElement $node
+     *
      * @return array
      */
-    protected function sibling(\DOMNode $node, string $siblingDir = 'nextSibling')
+    protected function sibling($node, string $siblingDir = 'nextSibling')
     {
         $nodes = [];
 

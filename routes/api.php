@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ScrapingController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controller\ScrapingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,18 @@ use App\Http\Controller\ScrapingController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::prefix('grupo-u/')->group(function () {
+    // Public routes
+    Route::post('register', [AuthController::class, 'register'])->name('register');
+    Route::post('login', [AuthController::class, 'login'])->name('login');
+
+    // Protected routes
+    Route::group(['middleware' => ['auth:sanctum']], function() {
+        Route::get('climas', [ScrapingController::class, 'scraper'])->name('climas');
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+    });
 });

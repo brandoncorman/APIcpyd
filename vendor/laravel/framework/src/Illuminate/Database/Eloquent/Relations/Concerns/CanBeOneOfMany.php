@@ -102,9 +102,7 @@ trait CanBeOneOfMany
 
             if (isset($previous)) {
                 $this->addOneOfManyJoinSubQuery($subQuery, $previous['subQuery'], $previous['column']);
-            }
-
-            if (isset($closure)) {
+            } elseif (isset($closure)) {
                 $closure($subQuery);
             }
 
@@ -139,7 +137,7 @@ trait CanBeOneOfMany
     {
         return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
             return [$column => 'MAX'];
-        })->all(), 'MAX', $relation);
+        })->all(), 'MAX', $relation ?: $this->guessRelationship());
     }
 
     /**
@@ -154,7 +152,7 @@ trait CanBeOneOfMany
     {
         return $this->ofMany(collect(Arr::wrap($column))->mapWithKeys(function ($column) {
             return [$column => 'MIN'];
-        })->all(), 'MIN', $relation);
+        })->all(), 'MIN', $relation ?: $this->guessRelationship());
     }
 
     /**
@@ -181,15 +179,14 @@ trait CanBeOneOfMany
     protected function newOneOfManySubQuery($groupBy, $column = null, $aggregate = null)
     {
         $subQuery = $this->query->getModel()
-            ->newQuery()
-            ->withoutGlobalScopes($this->removedScopes());
+            ->newQuery();
 
         foreach (Arr::wrap($groupBy) as $group) {
             $subQuery->groupBy($this->qualifyRelatedColumn($group));
         }
 
         if (! is_null($column)) {
-            $subQuery->selectRaw($aggregate.'('.$subQuery->getQuery()->grammar->wrap($column).') as '.$subQuery->getQuery()->grammar->wrap($column.'_aggregate'));
+            $subQuery->selectRaw($aggregate.'('.$column.') as '.$column);
         }
 
         $this->addOneOfManySubQueryConstraints($subQuery, $groupBy, $column, $aggregate);
@@ -211,7 +208,7 @@ trait CanBeOneOfMany
             $subQuery->applyBeforeQueryCallbacks();
 
             $parent->joinSub($subQuery, $this->relationName, function ($join) use ($on) {
-                $join->on($this->qualifySubSelectColumn($on.'_aggregate'), '=', $this->qualifyRelatedColumn($on));
+                $join->on($this->qualifySubSelectColumn($on), '=', $this->qualifyRelatedColumn($on));
 
                 $this->addOneOfManyJoinSubQueryConstraints($join, $on);
             });

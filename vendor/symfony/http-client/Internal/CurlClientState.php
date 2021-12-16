@@ -68,7 +68,7 @@ final class CurlClientState extends ClientState
         }
     }
 
-    public function __sleep(): array
+    public function __sleep()
     {
         throw new \BadMethodCallException('Cannot serialize '.__CLASS__);
     }

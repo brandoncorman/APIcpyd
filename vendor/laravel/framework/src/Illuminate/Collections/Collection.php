@@ -4,6 +4,8 @@ namespace Illuminate\Support;
 
 use ArrayAccess;
 use ArrayIterator;
+use Illuminate\Collections\ItemNotFoundException;
+use Illuminate\Collections\MultipleItemsFoundException;
 use Illuminate\Support\Traits\EnumeratesValues;
 use Illuminate\Support\Traits\Macroable;
 use stdClass;
@@ -502,29 +504,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Determine if any of the keys exist in the collection.
-     *
-     * @param  mixed  $key
-     * @return bool
-     */
-    public function hasAny($key)
-    {
-        if ($this->isEmpty()) {
-            return false;
-        }
-
-        $keys = is_array($key) ? $key : func_get_args();
-
-        foreach ($keys as $value) {
-            if ($this->has($value)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
      * Concatenate values of a given key as a string.
      *
      * @param  string  $value
@@ -807,30 +786,13 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get and remove the last N items from the collection.
+     * Get and remove the last item from the collection.
      *
-     * @param  int  $count
      * @return mixed
      */
-    public function pop($count = 1)
+    public function pop()
     {
-        if ($count === 1) {
-            return array_pop($this->items);
-        }
-
-        if ($this->isEmpty()) {
-            return new static;
-        }
-
-        $results = [];
-
-        $collectionCount = $this->count();
-
-        foreach (range(1, min($count, $collectionCount)) as $item) {
-            array_push($results, array_pop($this->items));
-        }
-
-        return new static($results);
+        return array_pop($this->items);
     }
 
     /**
@@ -850,7 +812,7 @@ class Collection implements ArrayAccess, Enumerable
     /**
      * Push one or more items onto the end of the collection.
      *
-     * @param  mixed  $values
+     * @param  mixed  $values [optional]
      * @return $this
      */
     public function push(...$values)
@@ -977,30 +939,13 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Get and remove the first N items from the collection.
+     * Get and remove the first item from the collection.
      *
-     * @param  int  $count
      * @return mixed
      */
-    public function shift($count = 1)
+    public function shift()
     {
-        if ($count === 1) {
-            return array_shift($this->items);
-        }
-
-        if ($this->isEmpty()) {
-            return new static;
-        }
-
-        $results = [];
-
-        $collectionCount = $this->count();
-
-        foreach (range(1, min($count, $collectionCount)) as $item) {
-            array_push($results, array_shift($this->items));
-        }
-
-        return new static($results);
+        return array_shift($this->items);
     }
 
     /**
@@ -1131,8 +1076,8 @@ class Collection implements ArrayAccess, Enumerable
      * @param  mixed  $value
      * @return mixed
      *
-     * @throws \Illuminate\Support\ItemNotFoundException
-     * @throws \Illuminate\Support\MultipleItemsFoundException
+     * @throws \Illuminate\Collections\ItemNotFoundException
+     * @throws \Illuminate\Collections\MultipleItemsFoundException
      */
     public function sole($key = null, $operator = null, $value = null)
     {
@@ -1151,33 +1096,6 @@ class Collection implements ArrayAccess, Enumerable
         }
 
         return $items->first();
-    }
-
-    /**
-     * Get the first item in the collection but throw an exception if no matching items exist.
-     *
-     * @param  mixed  $key
-     * @param  mixed  $operator
-     * @param  mixed  $value
-     * @return mixed
-     *
-     * @throws \Illuminate\Support\ItemNotFoundException
-     */
-    public function firstOrFail($key = null, $operator = null, $value = null)
-    {
-        $filter = func_num_args() > 1
-            ? $this->operatorForWhere(...func_get_args())
-            : $key;
-
-        $placeholder = new stdClass();
-
-        $item = $this->first($filter, $placeholder);
-
-        if ($item === $placeholder) {
-            throw new ItemNotFoundException;
-        }
-
-        return $item;
     }
 
     /**
@@ -1435,28 +1353,6 @@ class Collection implements ArrayAccess, Enumerable
     }
 
     /**
-     * Return only unique items from the collection array.
-     *
-     * @param  string|callable|null  $key
-     * @param  bool  $strict
-     * @return static
-     */
-    public function unique($key = null, $strict = false)
-    {
-        $callback = $this->valueRetriever($key);
-
-        $exists = [];
-
-        return $this->reject(function ($item, $key) use ($callback, $strict, &$exists) {
-            if (in_array($id = $callback($item, $key), $exists, $strict)) {
-                return true;
-            }
-
-            $exists[] = $id;
-        });
-    }
-
-    /**
      * Reset the keys on the underlying array.
      *
      * @return static
@@ -1505,7 +1401,6 @@ class Collection implements ArrayAccess, Enumerable
      *
      * @return \ArrayIterator
      */
-    #[\ReturnTypeWillChange]
     public function getIterator()
     {
         return new ArrayIterator($this->items);
@@ -1516,7 +1411,6 @@ class Collection implements ArrayAccess, Enumerable
      *
      * @return int
      */
-    #[\ReturnTypeWillChange]
     public function count()
     {
         return count($this->items);
@@ -1562,7 +1456,6 @@ class Collection implements ArrayAccess, Enumerable
      * @param  mixed  $key
      * @return bool
      */
-    #[\ReturnTypeWillChange]
     public function offsetExists($key)
     {
         return isset($this->items[$key]);
@@ -1574,7 +1467,6 @@ class Collection implements ArrayAccess, Enumerable
      * @param  mixed  $key
      * @return mixed
      */
-    #[\ReturnTypeWillChange]
     public function offsetGet($key)
     {
         return $this->items[$key];
@@ -1587,7 +1479,6 @@ class Collection implements ArrayAccess, Enumerable
      * @param  mixed  $value
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function offsetSet($key, $value)
     {
         if (is_null($key)) {
@@ -1603,7 +1494,6 @@ class Collection implements ArrayAccess, Enumerable
      * @param  string  $key
      * @return void
      */
-    #[\ReturnTypeWillChange]
     public function offsetUnset($key)
     {
         unset($this->items[$key]);

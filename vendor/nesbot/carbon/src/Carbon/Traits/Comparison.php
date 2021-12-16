@@ -622,7 +622,7 @@ trait Comparison
 
         if (!isset($units[$unit])) {
             if (isset($this->$unit)) {
-                return $this->resolveCarbon($date)->$unit === $this->$unit;
+                return $this->$unit === $this->resolveCarbon($date)->$unit;
             }
 
             if ($this->localStrictModeEnabled ?? static::isStrictModeEnabled()) {
@@ -949,7 +949,7 @@ trait Comparison
         $tester = trim($tester);
 
         if (preg_match('/^\d+$/', $tester)) {
-            return $this->year === (int) $tester;
+            return $this->year === \intval($tester);
         }
 
         if (preg_match('/^\d{3,}-\d{1,2}$/', $tester)) {
@@ -964,9 +964,9 @@ trait Comparison
 
         /* @var CarbonInterface $max */
         $median = static::parse('5555-06-15 12:30:30.555555')->modify($modifier);
-        $current = $this->avoidMutation();
+        $current = $this->copy();
         /* @var CarbonInterface $other */
-        $other = $this->avoidMutation()->modify($modifier);
+        $other = $this->copy()->modify($modifier);
 
         if ($current->eq($other)) {
             return true;
@@ -1001,7 +1001,7 @@ trait Comparison
         ];
 
         foreach ($units as $unit => [$minimum, $startUnit]) {
-            if ($minimum === $median->$unit) {
+            if ($median->$unit === $minimum) {
                 $current = $current->startOf($startUnit);
 
                 break;

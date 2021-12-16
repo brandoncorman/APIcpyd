@@ -441,7 +441,7 @@ abstract class AbstractBrowser
      *
      * @throws \RuntimeException When processing returns exit code
      */
-    protected function doRequestInProcess(object $request)
+    protected function doRequestInProcess($request)
     {
         $deprecationsFile = tempnam(sys_get_temp_dir(), 'deprec');
         putenv('SYMFONY_DEPRECATIONS_SERIALIZE='.$deprecationsFile);
@@ -476,7 +476,7 @@ abstract class AbstractBrowser
      *
      * @return object An origin response instance
      */
-    abstract protected function doRequest(object $request);
+    abstract protected function doRequest($request);
 
     /**
      * Returns the script to execute when the request must be insulated.
@@ -485,7 +485,7 @@ abstract class AbstractBrowser
      *
      * @throws \LogicException When this abstract class is not implemented
      */
-    protected function getScript(object $request)
+    protected function getScript($request)
     {
         throw new \LogicException('To insulate requests, you need to override the getScript() method.');
     }
@@ -507,7 +507,7 @@ abstract class AbstractBrowser
      *
      * @return Response An BrowserKit Response instance
      */
-    protected function filterResponse(object $response)
+    protected function filterResponse($response)
     {
         return $response;
     }
@@ -699,7 +699,7 @@ abstract class AbstractBrowser
      *
      * @return Crawler
      */
-    protected function requestFromRequest(Request $request, bool $changeHistory = true)
+    protected function requestFromRequest(Request $request, $changeHistory = true)
     {
         return $this->request($request->getMethod(), $request->getUri(), $request->getParameters(), $request->getFiles(), $request->getServer(), $request->getContent(), $changeHistory);
     }

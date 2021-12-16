@@ -217,12 +217,12 @@ class SqlServerGrammar extends Grammar
         }
 
         return Arr::first($query->orders, function ($value) {
-            return $this->isExpression($value['column'] ?? null);
+            return $this->isExpression($value['column']);
         }, false) !== false;
     }
 
     /**
-     * Move the order bindings to be after the "select" statement to account for an order by subquery.
+     * Move the order bindings to be after the "select" statement to account for a order by subquery.
      *
      * @param  \Illuminate\Database\Query\Builder  $query
      * @return array
