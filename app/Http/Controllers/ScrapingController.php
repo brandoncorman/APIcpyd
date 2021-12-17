@@ -32,7 +32,7 @@ class ScrapingController extends Controller
                 $this->data[$i]['temperatura_maxima'] = (float)$tr->eq(17 + $aux)->text() + 273.15;
                 $this->data[$i]['precipitaciones'] = ((float)$tr->eq(20 + $aux)->text())/1000;
                 $this->data[$i]['fecha'] = $this->fecha_actual;
-                switch ($this->data[i]['nombre_estacion']) {
+                switch ($this->data[$i]['nombre_estacion']) {
                     case 'Chacalluta, Arica Ap.':
                         $this->data[$i]['codigo_estacion'] = 180005;
                         $this->data[$i]['latitud'] = "18° 21' 20'' S";
@@ -135,7 +135,7 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '73.03ºW';
                         $this->data[$i]['altitud'] = "13";
                         break;
-                    case 'MarÃ­a Dolores, Los Angeles Ad.':
+                    case 'María Dolores, Los Angeles Ad.':
                         $this->data[$i]['codigo_estacion'] = 370033;
                         $this->data[$i]['latitud'] = "37° 24' 10'' S";
                         $this->data[$i]['longitud'] = '72.42ºW';
@@ -213,7 +213,7 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '70.51ºW';
                         $this->data[$i]['altitud'] = "36";
                         break;
-                    case 'Fuentes MartÃ­nez, Porvenir Ad.':
+                    case 'Fuentes Martínez, Porvenir Ad.':
                         $this->data[$i]['codigo_estacion'] = 530005;
                         $this->data[$i]['latitud'] = "53° 15' 13'' S";
                         $this->data[$i]['longitud'] = '70.32ºW';
