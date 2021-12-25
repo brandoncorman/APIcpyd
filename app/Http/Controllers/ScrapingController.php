@@ -81,7 +81,7 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '71.12ºW';
                         $this->data[$i]['altitud'] = "137";
                         break;
-                    case 'Eulogio SÃ¡nchez, Tobalaba Ad.':
+                    case 'Eulogio Sánchez, Tobalaba Ad.':
                         $this->data[$i]['codigo_estacion'] = 330019;
                         $this->data[$i]['latitud'] = "33° 27' 19'' S";
                         $this->data[$i]['longitud'] = '70.41ºW';
@@ -99,7 +99,7 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '71.68ºW';
                         $this->data[$i]['altitud'] = "311";
                         break;
-                    case 'Pudahuel Santiago ':
+                    case 'Pudahuel Santiago':
                         $this->data[$i]['codigo_estacion'] = 330021;
                         $this->data[$i]['latitud'] = "33° 22' 42'' S";
                         $this->data[$i]['longitud'] = '70.41ºW';
@@ -111,25 +111,25 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '71.61ºW';
                         $this->data[$i]['altitud'] = "77";
                         break;
-                    case 'Juan FernÃ¡ndez, EstaciÃ³n MeteorolÃ³gica.':
+                    case 'Juan Fernández, Estación Meteorológica.':
                         $this->data[$i]['codigo_estacion'] = 330031;
                         $this->data[$i]['latitud'] = "33° 38' 9'' S";
                         $this->data[$i]['longitud'] = '78.83ºW';
                         $this->data[$i]['altitud'] = "40";
                         break;
-                    case 'General Freire, CuricÃ³ Ad.':
+                    case 'General Freire, Curicó Ad.':
                         $this->data[$i]['codigo_estacion'] = 340031;
                         $this->data[$i]['latitud'] = "34° 58' 10'' S";
                         $this->data[$i]['longitud'] = '71.14ºW';
                         $this->data[$i]['altitud'] = "229";
                         break;
-                    case 'General Bernardo O\'Higgins, ChillÃ¡n Ad.':
+                    case "General Bernardo O'Higgins, Chillán Ad.":
                         $this->data[$i]['codigo_estacion'] = 360011;
                         $this->data[$i]['latitud'] = "36° 35' 9'' S";
                         $this->data[$i]['longitud'] = '72.01ºW';
                         $this->data[$i]['altitud'] = "155";
                         break;
-                    case 'Carriel Sur, ConcepciÃ³n Ap.':
+                    case 'Carriel Sur, Concepción Ap.':
                         $this->data[$i]['codigo_estacion'] = 360019;
                         $this->data[$i]['latitud'] = "36° 46' 50'' S";
                         $this->data[$i]['longitud'] = '73.03ºW';
@@ -153,13 +153,13 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '73.05ºW';
                         $this->data[$i]['altitud'] = "18";
                         break;
-                    case 'CaÃ±al Bajo,  Osorno Ad.':
+                    case 'Cañal Bajo, Osorno Ad.':
                         $this->data[$i]['codigo_estacion'] = 400009;
                         $this->data[$i]['latitud'] = "40° 36' 52'' S";
                         $this->data[$i]['longitud'] = '73.04ºW';
                         $this->data[$i]['altitud'] = "61";
                         break;
-                    case 'El Tepual  Puerto Montt Ap.':
+                    case 'El Tepual Puerto Montt Ap.':
                         $this->data[$i]['codigo_estacion'] = 410005;
                         $this->data[$i]['latitud'] = "41° 26' 51'' S";
                         $this->data[$i]['longitud'] = '73.07ºW';
@@ -207,7 +207,7 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '72.52ºW';
                         $this->data[$i]['altitud'] = "69";
                         break;
-                    case 'Carlos IbaÃ±ez, Punta Arenas Ap.':
+                    case 'Carlos Ibañez, Punta Arenas Ap.':
                         $this->data[$i]['codigo_estacion'] = 520006;
                         $this->data[$i]['latitud'] = "53° 0' 6'' S";
                         $this->data[$i]['longitud'] = '70.51ºW';
@@ -231,6 +231,13 @@ class ScrapingController extends Controller
                         $this->data[$i]['longitud'] = '58.97ºW';
                         $this->data[$i]['altitud'] = "45";
                         break;
+                    case 'Punta Ángeles faro':
+                        $this->data[$i]['codigo_estacion'] = 950002;
+                        $this->data[$i]['latitud'] = "33° 01' 23'' S";
+                        $this->data[$i]['longitud'] = '71.38ºW';
+                        $this->data[$i]['altitud'] = "60";
+                        break;
+                        
                 }
                 $aux += 11;
             }
@@ -242,3 +249,97 @@ class ScrapingController extends Controller
                 ->json($this->data);
     }
 }
+
+
+/* #include <iostream>
+#include <math.h>
+
+using namespace std;
+
+
+
+ñuñoa las temperaturas,las precipitaciones, latitud, longitud
+santiago latitud, longitud
+iquique las temperaturas,las precipitaciones, latitud, longitud
+
+
+float haversine(float latitud,float longitud,float latitud2,float longitud2)
+{
+    int radio_tierra = 6378;
+    float distancia;
+
+    float PI = 3.141592659;
+    float latitud_radian = latitud * PI / 180;
+    float latitud2_radian = latitud2 * PI / 180;
+    float longitud_radian = longitud* PI / 180;
+    float longitud2_radian = longitud2 * PI / 180;
+
+    float diferencia_latitud = abs(latitud2_radian - latitud_radian);
+    float diferencia_longitud = abs(longitud2_radian - longitud_radian);
+
+    float A = pow(sin(diferencia_latitud/2),2) + cos(latitud)*cos(latitud2)* pow((sin(diferencia_longitud/2)),2);
+    cout << A << endl;
+
+    float C = 2*atan2(sqrt(A),sqrt(1-A));
+    cout << C << endl;
+
+    distancia = radio_tierra *C;
+    cout << distancia << " en kilometros" << endl;
+
+    return distancia;
+}
+
+
+void interpolacion(float distancia,float distancia3,float temperatura,float temperatura3)
+{
+    float formula = temperatura + ((temperatura3 - temperatura)/(distancia3+distancia)*(0+distancia));
+    cout << formula << endl;
+}
+
+return split(latitudes de la tabla)
+{
+    @foreach(explode('°,'',$latitudtabla) as $row)
+    <li>{{ $row }}</li>
+     @endforeach  /del array solo tomamos [1,2,3]
+     </ol>
+     latitud = array1+array2+array3
+}
+
+return split(latitudes de la tabla)
+{
+    @foreach(explode('°,'',$latitudtabla) as $row)
+    <li>{{ $row }}</li>
+     @endforeach  /del array solo tomamos [1,2,3]
+     </ol>
+     latitud = array1+array2+array3
+}
+
+
+int main()
+{
+    float temperatura_maxima = 15;
+    float temperatura_maxima2 = 18;  no se usa 
+    float temperatura_maxima3 = 17;
+    float temeperatura_minima = 12;
+    float temeperatura_minima2 = 9; no se usa 
+    float temeperatura_minima3 = 10;
+    float la = 18.2;
+    float lo = 70.2;
+    float la2 = 20.32;
+    float lo2 = 70.11;
+    float la3 = 23.26;
+    float lo3 = 70.26;
+
+
+    float distancia = haversine(la2,lo2,la,lo);
+    cout << distancia << endl;
+    float distancia3 = haversine(la2,lo2,la3,lo3);
+    cout << distancia3 << endl;
+
+    interpolacion(distancia,distancia3,temperatura_maxima,temperatura_maxima3);
+    interpolacion(distancia,distancia3,temeperatura_minima,temeperatura_minima3);
+
+
+
+    return 0;
+}*/

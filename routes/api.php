@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ScrapingController;
+use App\Http\Controllers\EstimacionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -29,5 +30,8 @@ Route::prefix('grupo-c/')->group(function () {
     Route::group(['middleware' => ['auth:sanctum']], function() {
         Route::get('climas', [ScrapingController::class, 'scraper'])->name('climas');
         Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('/{longitud}/{latitud}/estimacion', [EstimacionController::class, 'estimacion'])->name('estimacion');
     });
 });
+
+
