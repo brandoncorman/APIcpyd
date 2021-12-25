@@ -346,37 +346,5 @@ class EstimacionController extends Controller
     {
         $resultado = $temperatura+(($temperatura3-$temperatura)/($distancia3+$distancia)*(0+$distancia));
         return $resultado;
-    }
-
-
-/*
-
-int main()
-{
-    float temperatura_maxima = 15;
-    float temperatura_maxima3 = 17;
-    float temeperatura_minima = 12;
-    float temeperatura_minima3 = 10;
-    float la = 18.2;
-    float lo = 70.2;
-    float la2 = 20.32;
-    float lo2 = 70.11;
-    float la3 = 23.26;
-    float lo3 = 70.26;
-
-
-    float distancia = haversine(la2,lo2,la,lo);
-    cout << distancia << endl;
-    float distancia3 = haversine(la2,lo2,la3,lo3);
-    cout << distancia3 << endl;
-
-    interpolacion(distancia,distancia3,temperatura_maxima,temperatura_maxima3);
-    interpolacion(distancia,distancia3,temeperatura_minima,temeperatura_minima3);
-
-
-
-    return 0;
-}*/
-
-    
+    }   
 }
