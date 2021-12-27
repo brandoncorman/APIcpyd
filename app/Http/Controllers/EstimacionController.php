@@ -294,17 +294,22 @@ class EstimacionController extends Controller
                 $temperatura_min2 = 280.15;
                 $precipitacion2 = 0.166;
                 break;
+            default:
+                return response()
+                ->json(["resultado_max" => "Sin datos",
+                        "resultado_min" => "Sin datos",
+                        "resultado_precipitacion" => "Sin datos"]);
         }
         
         $distancia = $this->haversine($latitudapi,$Latitud1,$longitudapi,$longitud1);
         $distancia2 = $this->haversine($latitudapi,$Latitud2,$longitudapi,$longitud2);
-        $resultado_max = $this->interpolacion($distancia,$distancia2,$temperatura_max1,$temperatura_max2);
-        $resultado_min = $this->interpolacion($distancia,$distancia2,$temperatura_min1,$temperatura_min2);
-        $resultado_precipitacion = $this->interpolacion($distancia,$distancia2,$precipitacion1,$precipitacion2);
+        $resultado_max = ($this->interpolacion($distancia,$distancia2,$temperatura_max1,$temperatura_max2))-273.15;
+        $resultado_min = ($this->interpolacion($distancia,$distancia2,$temperatura_min1,$temperatura_min2))-273.15;
+        $resultado_precipitacion = ($this->interpolacion($distancia,$distancia2,$precipitacion1,$precipitacion2))*1000;
         return response()
-                ->json(["resultado_max" => $resultado_max,
-                        "resultado_min" => $resultado_min,
-                        "resultado_precipitacion" => $resultado_precipitacion]);
+                ->json(["resultado_max" => round($resultado_max, 1),
+                        "resultado_min" => round($resultado_min, 1),
+                        "resultado_precipitacion" => round($resultado_precipitacion, 2)]);
     }
     public function splitla($valor)
     {
